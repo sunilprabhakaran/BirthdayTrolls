@@ -1,3 +1,18 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Custom Login Form</title>
+    
+    
+    
+    
+        <link rel="stylesheet" href="css/style.css">
+
+    
+    
+    
+  </head>
 <?php
 session_start();
 require_once __DIR__ . '/src/Facebook/autoload.php';
@@ -77,5 +92,9 @@ if (isset($accessToken)) {
 } else {
 	// replace your website URL same as added in the developers.facebook.com/apps e.g. if you used http instead of https and you used non-www version or www version of your website then you must add the same here
 	$loginUrl = $helper->getLoginUrl('http://localhost/sample/index1.php', $permissions);
-	echo '<a href="' . $loginUrl . '">Log in with Facebook!</a>';
+	//echo '<a href="' . $loginUrl . '">Log in with Facebook!</a>';
+
+  echo '<body><div id="wrapper"><div class="join">Welcome,</div><div class="lock"></div><div class="clr">Click here to login trough facebook.</div><a class="facebook" href="' . $loginUrl . '">Facebook</a></div></body>';
 }
+?>
+</html>
