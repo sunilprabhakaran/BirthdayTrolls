@@ -70,7 +70,18 @@ body {
 	border-radius: 5px;
 	padding: 40px;
 }
-
+#wrapper1 {
+	margin: 50px auto;
+	width: 540px;
+	height:369px;
+	background: #fff;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	-ms-border-radius: 5px;
+	border-radius: 5px;
+	padding: 40px;
+}
 .join {
 	color: #222;
 	font-size: 44px;

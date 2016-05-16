@@ -7,7 +7,7 @@
     
     
     
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/style2.css">
 
     
     
@@ -89,7 +89,7 @@ if (isset($accessToken)) {
 
 	// getting basic info about user
 	try {
-		$requestPicture = $fb->get('/me/picture?redirect=false&height=300'); //getting user picture
+		$requestPicture = $fb->get('/me/picture?redirect=false&height=200'); //getting user picture
 		$requestProfile = $fb->get('/me?fields=name,id,email,location,birthday,gender'); // getting basic info
 		$picture = $requestPicture->getGraphUser();
 		$profile = $requestProfile->getGraphUser();
@@ -105,14 +105,20 @@ if (isset($accessToken)) {
 		echo 'Facebook SDK returned an error: ' . $e->getMessage();
 		exit;
 	}
-	
+	echo '<body><div id="wrapper1">';
 	// showing picture on the screen
 	echo "<img src='".$picture['url']."'/>";
+	echo '<div class="clr"></div>';
 	echo 'Name: ' . $profile['name'];
+	echo '<div class="clr"></div>';
 	echo 'Email: ' . $profile['email'];
+	echo '<div class="clr"></div>';
 	echo 'Gender: ' . $profile['gender'];
+	echo '<div class="clr"></div>';
 	echo 'Birthday: ' . $profile['birthday']->format('d-m-Y');
-	echo 'Location: ' . $profile['location'];
+	echo '<div class="clr"></div>';
+	echo 'Location: ' . $profile['location']['name'];
+	echo '</div></body>';
 
 	// saving picture
 	$img = __DIR__.'/'.$profile['id'].'.jpg';
