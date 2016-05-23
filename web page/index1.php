@@ -1,3 +1,18 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Custom Login Form</title>
+    
+    
+    
+    
+        <link rel="stylesheet" href="css/style2.css">
+
+    
+    
+    
+  </head>
 <?php
 session_start();
 require_once __DIR__ . '/src/Facebook/autoload.php';
@@ -10,7 +25,11 @@ $fb = new Facebook\Facebook([
 
 $helper = $fb->getRedirectLoginHelper();
 
-$permissions = ['email']; // optional
+$permissions = array(
+    'email',
+    'user_location',
+    'user_birthday'
+); // optional
 	
 try {
 	if (isset($_SESSION['facebook_access_token'])) {
@@ -47,16 +66,33 @@ if (isset($accessToken)) {
 		// setting default access token to be used in script
 		$fb->setDefaultAccessToken($_SESSION['facebook_access_token']);
 	}
+        // validating the access token
+	try {
+		$request = $fb->get('/me');
+	} catch(Facebook\Exceptions\FacebookResponseException $e) {
+		// When Graph returns an error
+		if ($e->getCode() == 190) {
+			// replace your website URL same as added in the developers.facebook.com/apps e.g. if you used http instead of https and you used non-www version or www version of your website then you must add the same here
+	$loginUrl = $helper->getLoginUrl('http://localhost/sample/index1.php', $permissions);
+  echo '<body><div id="wrapper"><div class="join">Welcome,</div><div class="lock"></div><div class="clr">Click here to login trough facebook.</div><a class="facebook" href="' . $loginUrl . '">Facebook</a></div></body>';
+		}
+	} catch(Facebook\Exceptions\FacebookSDKException $e) {
+		// When validation fails or other local issues
+		echo 'Facebook SDK returned an error: ' . $e->getMessage();
+		exit;
+	}
 
 	// redirect the user back to the same page if it has "code" GET variable
 	if (isset($_GET['code'])) {
-		header('Location: ./login.html');
+		header('Location: ./index1.php');
 	}
 
 	// getting basic info about user
 	try {
-		$profile_request = $fb->get('/me?fields=name,first_name,last_name,email');
-		$profile = $profile_request->getGraphNode()->asArray();
+		$requestPicture = $fb->get('/me/picture?redirect=false&height=200'); //getting user picture
+		$requestProfile = $fb->get('/me?fields=name,id,email,location,birthday,gender'); // getting basic info
+		$picture = $requestPicture->getGraphUser();
+		$profile = $requestProfile->getGraphUser();
 	} catch(Facebook\Exceptions\FacebookResponseException $e) {
 		// When Graph returns an error
 		echo 'Graph returned an error: ' . $e->getMessage();
@@ -69,13 +105,30 @@ if (isset($accessToken)) {
 		echo 'Facebook SDK returned an error: ' . $e->getMessage();
 		exit;
 	}
-	
-	// printing $profile array on the screen which holds the basic info about user
-	print_r($profile);
+	echo '<body><div id="wrapper1">';
+	// showing picture on the screen
+	echo "<img src='".$picture['url']."'/>";
+	echo '<div class="clr"></div>';
+	echo 'Name: ' . $profile['name'];
+	echo '<div class="clr"></div>';
+	echo 'Email: ' . $profile['email'];
+	echo '<div class="clr"></div>';
+	echo 'Gender: ' . $profile['gender'];
+	echo '<div class="clr"></div>';
+	echo 'Birthday: ' . $profile['birthday']->format('d-m-Y');
+	echo '<div class="clr"></div>';
+	echo 'Location: ' . $profile['location']['name'];
+	echo '</div></body>';
+
+	// saving picture
+	$img = __DIR__.'/'.$profile['id'].'.jpg';
+	file_put_contents($img, file_get_contents($picture['url']));
 
   	// Now you can redirect to another page and use the access token from $_SESSION['facebook_access_token']
 } else {
 	// replace your website URL same as added in the developers.facebook.com/apps e.g. if you used http instead of https and you used non-www version or www version of your website then you must add the same here
 	$loginUrl = $helper->getLoginUrl('http://localhost/sample/index1.php', $permissions);
-	echo '<a href="' . $loginUrl . '">Log in with Facebook!</a>';
+  echo '<body><div id="wrapper"><div class="join">Welcome,</div><div class="lock"></div><div class="clr">Click here to login trough facebook.</div><a class="facebook" href="' . $loginUrl . '">Facebook</a></div></body>';
 }
+?>
+</html>
