@@ -28,7 +28,8 @@ $helper = $fb->getRedirectLoginHelper();
 $permissions = array(
     'email',
     'user_location',
-    'user_birthday'
+    'user_birthday',
+    'user_friends'
 ); // optional
 	
 try {
@@ -91,6 +92,8 @@ if (isset($accessToken)) {
 	try {
 		$requestPicture = $fb->get('/me/picture?redirect=false&height=200'); //getting user picture
 		$requestProfile = $fb->get('/me?fields=name,id,email,location,birthday,gender'); // getting basic info
+		$friends = $fb->get('/me/taggable_friends?fields=picture.width(100).height(100)');
+		$friends = $friends->getGraphEdge()->asArray();
 		$picture = $requestPicture->getGraphUser();
 		$profile = $requestProfile->getGraphUser();
 	} catch(Facebook\Exceptions\FacebookResponseException $e) {
@@ -109,7 +112,7 @@ if (isset($accessToken)) {
 	// showing picture on the screen
 	echo "<img src='".$picture['url']."'/>";
 	echo '<div class="clr"></div>';
-	echo 'Name: ' . $profile['name'];
+	/*echo 'Name: ' . $profile['name'];
 	echo '<div class="clr"></div>';
 	echo 'Email: ' . $profile['email'];
 	echo '<div class="clr"></div>';
@@ -117,9 +120,14 @@ if (isset($accessToken)) {
 	echo '<div class="clr"></div>';
 	echo 'Birthday: ' . $profile['birthday']->format('d-m-Y');
 	echo '<div class="clr"></div>';
-	echo 'Location: ' . $profile['location']['name'];
-	echo '</div></body>';
-
+	echo 'Location: ' . $profile['location']['name'];*/
+	//geting friends profile pic
+	$x = 1; 
+	while($x <= 5) {
+	echo "<img src='".$friends[$x]['picture']['url']."'/>";
+	echo "      ";
+	$x++;}
+        echo '</div></body>';
 	// saving picture
 	$img = __DIR__.'/'.$profile['id'].'.jpg';
 	file_put_contents($img, file_get_contents($picture['url']));
