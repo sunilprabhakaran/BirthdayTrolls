@@ -1,0 +1,45 @@
+@charset "utf-8";
+/* CSS Document */
+
+img.top { 
+left: 80px;
+position: absolute;
+top: 49px;
+z-index: 2;
+size: auto;
+} 
+img.bottom { 
+left: 80px; 
+position: absolute; 
+top: 50px; 
+z-index: 1; 
+size: auto;
+} 
+
+
+	
+ ul#menu {
+  padding: 0px;
+margin-top: 365px;
+margin-left: 1095px;
+}
+
+ul#menu li {
+    display: inline;
+	  margin-left: -3px;
+}
+
+ul#menu li a {
+    color: #000;
+padding: 24px 45px;
+text-decoration: none;
+margin: 25px;
+background-color: #F00;
+}
+
+ul#menu li a:hover {
+	border-top:3px solid #F60;
+    
+	margin-left: -3px;
+margin:22px	;
+}
