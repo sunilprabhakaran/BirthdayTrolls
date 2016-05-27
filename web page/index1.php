@@ -7,8 +7,13 @@
     
     
     
-        <link rel="stylesheet" href="css/style2.css">
-
+        <link rel="stylesheet" href="css/style3.css">
+<script>
+function clear(something) {
+	document.getElementById("result").innerHTML = "";
+    document.getElementById("result").innerHTML = "<img src='"+something+"'/>";
+}
+</script>
     
     
     
@@ -92,8 +97,8 @@ if (isset($accessToken)) {
 	try {
 		$requestPicture = $fb->get('/me/picture?redirect=false&height=200'); //getting user picture
 		$requestProfile = $fb->get('/me?fields=name,id,email,location,birthday,gender'); // getting basic info
-		$friends = $fb->get('/me/taggable_friends?fields=picture.width(100).height(100)');
-		$friends = $friends->getGraphEdge()->asArray();
+		$friends = $fb->get('/me/taggable_friends?fields=name,picture.width(100).height(100)&limit=100');
+		$friends = $friends->getGraphEdge();
 		$picture = $requestPicture->getGraphUser();
 		$profile = $requestProfile->getGraphUser();
 	} catch(Facebook\Exceptions\FacebookResponseException $e) {
@@ -122,11 +127,33 @@ if (isset($accessToken)) {
 	echo '<div class="clr"></div>';
 	echo 'Location: ' . $profile['location']['name'];*/
 	//geting friends profile pic
-	$x = 1; 
+	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $name = $_POST["name"];
+}
+	echo '<form method="post" action="'.htmlspecialchars($_SERVER["PHP_SELF"]).'"> Name: <input type="text" name="name" value="'.$name.'"><input type="submit" name="submit" value="Submit"></form>';
+	echo '<div id="result">';
+	if ($fb->next($friends)) {
+		$allFriends = array();
+		$friendsArray = $friends->asArray();
+		$allFriends = array_merge($friendsArray, $allFriends);
+		while ($friends = $fb->next($friends)) {
+			$friendsArray = $friends->asArray();
+			$allFriends = array_merge($friendsArray, $allFriends);
+		}
+	} else {
+		$allFriends = $friends->asArray();
+		$totalFriends = count($allFriends);
+	}
+	
+		foreach ($allFriends as $key) {
+			if( strpos(strtolower($key['name']), $name) !== false ) echo "<a href='javascript:clear(\"".$key['picture']['url']."\");'><img src='".$key['picture']['url']."'/>".$key['name']."</a><br>";
+		}
+	echo '</div>';
+	/*$x = 1; 
 	while($x <= 5) {
 	echo "<img src='".$friends[$x]['picture']['url']."'/>";
 	echo "      ";
-	$x++;}
+	$x++;}*/
         echo '</div></body>';
 	// saving picture
 	$img = __DIR__.'/'.$profile['id'].'.jpg';
