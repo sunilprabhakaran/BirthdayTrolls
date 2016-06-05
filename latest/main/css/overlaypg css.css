@@ -1,0 +1,88 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+.topwrap{
+	background-color: #3B5998;
+	width:auto;
+	height:100px;
+}
+.background{
+	background-color:#09F;
+	width: 1333px;
+height: 1000px;
+}
+
+
+img.top1 { 
+left: 264px;
+position: absolute;
+top: 531px;
+z-index: 2;
+size: auto;
+height: 160px;
+width: 160px;
+} 
+img.top2 { 
+left: 919px;
+position: absolute;
+top: 460px;
+z-index: 2;
+size: auto;
+height: 160px;
+width: 160px;
+} 
+img.top3 { 
+left: 264px;
+position: absolute;
+top: 258px;
+z-index: 2;
+size: auto;
+height: 160px;
+width: 160px;
+} 
+img.top4 { 
+left: 919px;
+position: absolute;
+top: 736px;
+z-index: 2;
+size: auto;
+height: 160px;
+width: 160px;
+} 
+img.bdayboy { 
+left: 577px;
+position: absolute;
+top: 280px;
+z-index: 2;
+size: auto;
+height: 200px;
+width: 200px;
+} 
+img.bottom { 
+left: 203px;
+position: absolute;
+top: 164px;
+z-index: 1;
+size: auto;
+} 
+	
+ ul#menu {
+  padding: 0px;
+margin-top: -93px;
+margin-left: 585px;
+}
+
+ul#menu li {
+    display: inline;
+	  margin-left: -3px;
+}
+
+ul#menu li a {
+      color: #FFF;
+    padding: 23px 108px;
+    text-decoration: none;
+    margin: -54px;
+    background-color: #3B5998;
+}
+
