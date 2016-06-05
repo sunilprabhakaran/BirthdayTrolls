@@ -7,8 +7,13 @@
     
     
     
-        <link rel="stylesheet" href="css/style2.css">
-
+        <link rel="stylesheet" href="css/style3.css">
+<script>
+function clear(something) {
+	document.getElementById("result").innerHTML = "";
+    document.getElementById("result").innerHTML = "<img src='"+something+"'/>";
+}
+</script>
     
     
     
@@ -28,7 +33,8 @@ $helper = $fb->getRedirectLoginHelper();
 $permissions = array(
     'email',
     'user_location',
-    'user_birthday'
+    'user_birthday',
+    'user_friends'
 ); // optional
 	
 try {
@@ -91,6 +97,8 @@ if (isset($accessToken)) {
 	try {
 		$requestPicture = $fb->get('/me/picture?redirect=false&height=200'); //getting user picture
 		$requestProfile = $fb->get('/me?fields=name,id,email,location,birthday,gender'); // getting basic info
+		$friends = $fb->get('/me/taggable_friends?fields=name,picture.width(100).height(100)&limit=100');
+		$friends = $friends->getGraphEdge();
 		$picture = $requestPicture->getGraphUser();
 		$profile = $requestProfile->getGraphUser();
 	} catch(Facebook\Exceptions\FacebookResponseException $e) {
@@ -109,7 +117,7 @@ if (isset($accessToken)) {
 	// showing picture on the screen
 	echo "<img src='".$picture['url']."'/>";
 	echo '<div class="clr"></div>';
-	echo 'Name: ' . $profile['name'];
+	/*echo 'Name: ' . $profile['name'];
 	echo '<div class="clr"></div>';
 	echo 'Email: ' . $profile['email'];
 	echo '<div class="clr"></div>';
@@ -117,9 +125,36 @@ if (isset($accessToken)) {
 	echo '<div class="clr"></div>';
 	echo 'Birthday: ' . $profile['birthday']->format('d-m-Y');
 	echo '<div class="clr"></div>';
-	echo 'Location: ' . $profile['location']['name'];
-	echo '</div></body>';
-
+	echo 'Location: ' . $profile['location']['name'];*/
+	//geting friends profile pic
+	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $name = $_POST["name"];
+}
+	echo '<form method="post" action="'.htmlspecialchars($_SERVER["PHP_SELF"]).'"> Name: <input type="text" name="name" value="'.$name.'"><input type="submit" name="submit" value="Submit"></form>';
+	echo '<div id="result">';
+	if ($fb->next($friends)) {
+		$allFriends = array();
+		$friendsArray = $friends->asArray();
+		$allFriends = array_merge($friendsArray, $allFriends);
+		while ($friends = $fb->next($friends)) {
+			$friendsArray = $friends->asArray();
+			$allFriends = array_merge($friendsArray, $allFriends);
+		}
+	} else {
+		$allFriends = $friends->asArray();
+		$totalFriends = count($allFriends);
+	}
+	
+		foreach ($allFriends as $key) {
+			if( strpos(strtolower($key['name']), $name) !== false ) echo "<a href='javascript:clear(\"".$key['picture']['url']."\");'><img src='".$key['picture']['url']."'/>".$key['name']."</a><br>";
+		}
+	echo '</div>';
+	/*$x = 1; 
+	while($x <= 5) {
+	echo "<img src='".$friends[$x]['picture']['url']."'/>";
+	echo "      ";
+	$x++;}*/
+        echo '</div></body>';
 	// saving picture
 	$img = __DIR__.'/'.$profile['id'].'.jpg';
 	file_put_contents($img, file_get_contents($picture['url']));
